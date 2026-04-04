@@ -1,10 +1,7 @@
 package cz.uuk.adbgui.presentation.screens.dashboard
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +25,37 @@ internal fun DashboardContent(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {}
+            //verticalArrangement = Arrangement.Center,
+            //horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "ADB GUI demo",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+            }
+            Row {
+                Button(
+                    onClick = {
+                        //onAction(SettingsUiAction.DeviceNameOnAccept)
+                    }
+                ) {
+                    Text("Refresh server")
+                }
+                
+
+            }
+            Row {
+                TextField(
+                    value = "",
+                    label = { Text("Package") },
+                    onValueChange = {
+
+                    }
+                )
+            }
+        }
     }
 }
