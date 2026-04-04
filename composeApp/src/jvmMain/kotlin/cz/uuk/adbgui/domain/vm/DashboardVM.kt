@@ -46,8 +46,8 @@ class DashboardVM : ViewModel() {
     fun onDashboardAction(action: DashboardActions) {
         when (action) {
             is DashboardActions.ClosePackage -> closePackage(action.device, action.androidPackage)
-            is DashboardActions.Search -> TODO()
-            is DashboardActions.Refresh -> TODO()
+            is DashboardActions.Search -> search(action.term)
+            is DashboardActions.Refresh -> refresh()
             is DashboardActions.SetDevice -> setDevice(action.device)
             is DashboardActions.ToggleOpen -> toggleOpen()
         }
@@ -68,7 +68,17 @@ class DashboardVM : ViewModel() {
     }
 
     private fun search(term: String) {
-        viewModelScope.launch {}
+        val packages = _uiState.value.packages
+        if (term.isBlank()) {
+            return
+        }
+        val pattern = Regex.escape(term)
+        val regex = Regex(pattern, RegexOption.IGNORE_CASE)
+
+        val filteredPackages = packages.filter { pkg ->
+            regex.containsMatchIn(pkg.id)
+        }
+        _uiState.update { it.copy(packages = filteredPackages) }
     }
 
     private fun refresh() {
