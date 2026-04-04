@@ -1,13 +1,17 @@
 package cz.uuk.adbgui.presentation.screens.dashboard
 
+// for image
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,6 +19,8 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Cross
 import cz.uuk.adbgui.domain.vm.DashboardVM
+import java.io.File
+import org.jetbrains.skia.Image as SkiaImage
 
 @Composable
 fun DashboardPage(vm: DashboardVM) {
@@ -149,6 +155,55 @@ internal fun DashboardContent(
                         }
                     }
                 }
+
+                // IMAGE PREVIEW AREA
+                FileImage(
+                    imagePath = imagePath,
+                    onRemove = { imagePath = null }
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun FileImage(
+    imagePath: String?,
+    onRemove: () -> Unit
+) {
+    if (imagePath == null) return
+
+    val imageBitmap = remember(imagePath) {
+        try {
+            val bytes = File(imagePath).readBytes()
+            SkiaImage.makeFromEncoded(bytes).asImageBitmap()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    imageBitmap?.let { bitmap ->
+
+        Box(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            Image(
+                bitmap = bitmap,
+                contentDescription = "Selected image",
+                modifier = Modifier.size(250.dp)
+            )
+
+            // remove button
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    imageVector = FontAwesomeIcons.Solid.Cross,
+                    contentDescription = "Remove image"
+                )
             }
         }
     }
