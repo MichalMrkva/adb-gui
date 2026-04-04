@@ -52,6 +52,7 @@ class DashboardVM : ViewModel() {
             is DashboardActions.SetDevice -> setDevice(action.device)
             is DashboardActions.ToggleOpen -> toggleOpen()
             is DashboardActions.Reboot -> reboot(action.device)
+            is DashboardActions.Screenshot -> screenshot(action.device)
         }
     }
 
@@ -96,6 +97,12 @@ class DashboardVM : ViewModel() {
             repository.reboot(device)
         }
 
+    }
+
+    private fun screenshot(device: AndroidDevice) {
+        viewModelScope.launch {
+            repository.screenshot(device)
+        }
     }
 
 
