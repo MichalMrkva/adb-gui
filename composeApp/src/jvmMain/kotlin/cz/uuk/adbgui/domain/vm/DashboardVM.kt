@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.uuk.adbgui.data.AdbRepository
 import cz.uuk.adbgui.domain.model.AndroidDevice
+import cz.uuk.adbgui.presentation.screens.dashboard.DashboardActions
 import cz.uuk.adbgui.presentation.screens.dashboard.DashboardUiStateUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,5 +41,26 @@ class DashboardVM : ViewModel() {
         }
 
     }
+
+    fun onDashboardAction(action: DashboardActions) {
+        when (action) {
+            is DashboardActions.ClosePackage -> TODO()
+            is DashboardActions.Search -> TODO()
+            is DashboardActions.Refresh -> TODO()
+            is DashboardActions.SetDevice -> TODO()
+            is DashboardActions.ToggleOpen -> TODO()
+        }
+    }
+
+    private fun closePackage(packageId: String) {
+        viewModelScope.launch {
+
+        }
+    }
+
+    private fun setDevice(device: AndroidDevice) {
+        _uiState.update { it.copy(selectedDevice = device) }
+    }
+
 
 }

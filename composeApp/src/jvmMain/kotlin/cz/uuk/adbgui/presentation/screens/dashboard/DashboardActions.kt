@@ -2,7 +2,7 @@ package cz.uuk.adbgui.presentation.screens.dashboard
 
 import cz.uuk.adbgui.domain.model.AndroidDevice
 
-interface DashboardActions {
+sealed interface DashboardActions {
     object ToggleOpen : DashboardActions
     object Refresh : DashboardActions
     data class SetDevice(val device: AndroidDevice) : DashboardActions
