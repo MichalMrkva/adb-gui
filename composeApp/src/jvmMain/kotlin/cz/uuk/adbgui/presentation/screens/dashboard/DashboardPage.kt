@@ -58,8 +58,14 @@ internal fun DashboardContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Button(onClick = { }) {
+                Button(onClick = { onAction(DashboardActions.Refresh) }) {
                     Text("Refresh server")
+                }
+                Button(onClick = { onAction(DashboardActions.Refresh) }) {
+                    Text("Reboot")
+                }
+                Button(onClick = { onAction(DashboardActions.Refresh) }) {
+                    Text("Screenshot")
                 }
 
                 Box {
