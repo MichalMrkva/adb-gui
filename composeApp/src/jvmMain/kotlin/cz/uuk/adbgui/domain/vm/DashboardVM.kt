@@ -50,6 +50,7 @@ class DashboardVM : ViewModel() {
             is DashboardActions.Refresh -> refresh()
             is DashboardActions.SetDevice -> setDevice(action.device)
             is DashboardActions.ToggleOpen -> toggleOpen()
+            is DashboardActions.SetSearchTerm -> setSearchTerm(action.term)
         }
     }
 
@@ -83,6 +84,10 @@ class DashboardVM : ViewModel() {
 
     private fun refresh() {
 
+    }
+
+    private fun setSearchTerm(term: String) {
+        _uiState.update { it.copy(searchTerm = term) }
     }
 
 
