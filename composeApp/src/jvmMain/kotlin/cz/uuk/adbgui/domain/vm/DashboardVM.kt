@@ -3,6 +3,7 @@ package cz.uuk.adbgui.domain.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.uuk.adbgui.data.AdbRepository
+import cz.uuk.adbgui.domain.model.AndroidDevice
 import cz.uuk.adbgui.presentation.screens.dashboard.DashboardUiStateUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,11 +19,12 @@ class DashboardVM : ViewModel() {
         loadDevices()
     }
 
-    fun loadDevices() {
+    private fun loadDevices() {
         viewModelScope.launch {
             repository.devices.collect { devices ->
                 _uiState.update { old ->
                     if (old.selectedDevice == null && devices.isNotEmpty()) {
+                        getPackages(devices[0])
                         old.copy(deviceList = devices, selectedDevice = devices[0])
                     } else {
                         old.copy(deviceList = devices)
@@ -30,6 +32,13 @@ class DashboardVM : ViewModel() {
                 }
             }
         }
+    }
+
+    private fun getPackages(device: AndroidDevice) {
+        viewModelScope.launch {
+            repository.devicePackages(device).collect { packages -> _uiState.update { it.copy(packages = packages) } }
+        }
+
     }
 
 }
