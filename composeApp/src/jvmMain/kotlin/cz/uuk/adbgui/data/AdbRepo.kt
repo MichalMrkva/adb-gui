@@ -16,8 +16,12 @@ class AdbRepository(
 ) {
     val devices: StateFlow<List<AndroidDevice>> = devicesStateFlow()
 
+    init {
+        startServer()
+    }
+
     private fun startServer() {
-        getDevices()
+        runAdb("start-server")
     }
 
     fun refresh() {}
@@ -27,17 +31,44 @@ class AdbRepository(
     }.stateIn(scope, SharingStarted.Lazily, emptyList())
 
     private fun getDevices(): List<AndroidDevice> {
-        return emptyList()
+        val output = runAdb("devices", "-l") ?: return emptyList()
+        return output.lines()
+            .drop(1)
+            .filter { it.contains("\tdevice") }
+            .map { line ->
+                val parts = line.trim().split("\\s+".toRegex())
+                val serial = parts[0]
+                val model = line.substringAfter("model:", "").substringBefore(" ").ifEmpty { serial }
+                AndroidDevice(id = serial, name = model)
+            }
     }
 
     private fun getPackages(device: AndroidDevice): List<AndroidPackage> {
-        return emptyList()
+
+        val output = runAdb("-s", device.id, "shell", "pm", "list", "packages") ?: return emptyList()
+        return output.lines()
+            .filter { it.startsWith("package:") }
+            .map { AndroidPackage(id = it.removePrefix("package:").trim()) }
     }
 
     fun devicePackages(device: AndroidDevice): StateFlow<List<AndroidPackage>> = tickerFlow(1.seconds, 0.seconds).map {
         getPackages(device)
     }.stateIn(scope, SharingStarted.WhileSubscribed(1.seconds.inWholeMilliseconds), emptyList())
 
+    fun deletePackage(device: AndroidDevice, pack: AndroidPackage) {
+        runAdb("-s", device.id, "shell", "pm", "uninstall", "--user", "0", pack.id)
+    }
 
-    fun deletePackage(device: AndroidDevice, pack: AndroidPackage) {}
+    private fun runAdb(vararg args: String): String? {
+        return try {
+            val process = ProcessBuilder("adb", *args)
+                .redirectErrorStream(true)
+                .start()
+            val output = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            output
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
