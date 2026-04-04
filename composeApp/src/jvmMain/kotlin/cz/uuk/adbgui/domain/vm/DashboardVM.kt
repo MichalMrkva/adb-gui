@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 
 class DashboardVM : ViewModel() {
     private val repository: AdbRepository = AdbRepository()
@@ -53,6 +54,7 @@ class DashboardVM : ViewModel() {
             is DashboardActions.ToggleOpen -> toggleOpen()
             is DashboardActions.Reboot -> reboot()
             is DashboardActions.Screenshot -> screenshot()
+            is DashboardActions.OnHide -> onHide(action.file)
         }
     }
 
@@ -103,8 +105,14 @@ class DashboardVM : ViewModel() {
     private fun screenshot() {
         val device = _uiState.value.selectedDevice ?: return
         viewModelScope.launch {
-            repository.screenshot(device)
+            val file = repository.screenshot(device)
+            _uiState.update { it.copy(file = file) }
         }
+
+    }
+
+    private fun onHide(file: File) {
+        _uiState.update { it.copy(file = null) }
     }
 
 
