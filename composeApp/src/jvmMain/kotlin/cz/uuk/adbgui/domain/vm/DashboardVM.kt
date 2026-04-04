@@ -16,7 +16,6 @@ class DashboardVM : ViewModel() {
 
     init {
         loadDevices()
-
     }
 
     fun loadDevices() {

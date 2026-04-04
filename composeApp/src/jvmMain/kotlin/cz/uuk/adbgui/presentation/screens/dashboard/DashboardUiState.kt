@@ -1,14 +1,14 @@
 package cz.uuk.adbgui.presentation.screens.dashboard
 
 import androidx.compose.runtime.Immutable
-import cz.uuk.adbgui.domain.model.Device
-import cz.uuk.adbgui.domain.model.Package
+import cz.uuk.adbgui.domain.model.AndroidDevice
+import cz.uuk.adbgui.domain.model.AndroidPackage
 
 @Immutable
 data class DashboardUiStateUiState(
     val isOpen: Boolean = false,
-    val deviceList: List<Device> = listOf(),
-    val selectedDevice: Device? = null,
+    val deviceList: List<AndroidDevice> = listOf(),
+    val selectedDevice: AndroidDevice? = null,
     val searchTerm: String = "",
-    val packages: List<Package> = listOf(),
+    val packages: List<AndroidPackage> = listOf(),
 )

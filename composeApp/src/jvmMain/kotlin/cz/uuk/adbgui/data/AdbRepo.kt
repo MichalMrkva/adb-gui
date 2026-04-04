@@ -1,6 +1,6 @@
 package cz.uuk.adbgui.data
 
-import cz.uuk.adbgui.domain.model.Device
+import cz.uuk.adbgui.domain.model.AndroidDevice
 import cz.uuk.adbgui.utils.tickerFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.seconds
 class AdbRepository(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
-    val devices: StateFlow<List<Device>> = devicesStateFlow()
+    val devices: StateFlow<List<AndroidDevice>> = devicesStateFlow()
 
     private fun startServer() {
         getDevices()
@@ -23,18 +23,18 @@ class AdbRepository(
         getDevices()
     }.stateIn(scope, SharingStarted.Lazily, emptyList())
 
-    private fun getDevices(): List<Device> {
+    private fun getDevices(): List<AndroidDevice> {
         return emptyList()
     }
 
-    private fun getPackages(device: Device): List<Package> {
+    private fun getPackages(device: AndroidDevice): List<Package> {
         return emptyList()
     }
 
-    fun devicePackages(device: Device): StateFlow<List<Package>> = tickerFlow(1.seconds, 0.seconds).map {
+    fun devicePackages(device: AndroidDevice): StateFlow<List<Package>> = tickerFlow(1.seconds, 0.seconds).map {
         getPackages(device)
     }.stateIn(scope, SharingStarted.WhileSubscribed(1.seconds.inWholeMilliseconds), emptyList())
 
 
-    fun deletePackage(device: Device, pack: Package) {}
+    fun deletePackage(device: AndroidDevice, pack: Package) {}
 }
