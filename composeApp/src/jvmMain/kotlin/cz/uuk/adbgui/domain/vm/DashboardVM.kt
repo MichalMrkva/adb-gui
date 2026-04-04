@@ -44,11 +44,11 @@ class DashboardVM : ViewModel() {
 
     fun onDashboardAction(action: DashboardActions) {
         when (action) {
-            is DashboardActions.ClosePackage -> TODO()
+            is DashboardActions.ClosePackage -> closePackage(action.packageId)
             is DashboardActions.Search -> TODO()
             is DashboardActions.Refresh -> TODO()
-            is DashboardActions.SetDevice -> TODO()
-            is DashboardActions.ToggleOpen -> TODO()
+            is DashboardActions.SetDevice -> setDevice(action.device)
+            is DashboardActions.ToggleOpen -> toggleOpen()
         }
     }
 
@@ -63,7 +63,15 @@ class DashboardVM : ViewModel() {
     }
 
     private fun toggleOpen() {
+        _uiState.update { it.copy(isOpen = !it.isOpen) }
+    }
 
+    private fun search(term: String) {
+        viewModelScope.launch {}
+    }
+
+    private fun refresh() {
+        
     }
 
 
