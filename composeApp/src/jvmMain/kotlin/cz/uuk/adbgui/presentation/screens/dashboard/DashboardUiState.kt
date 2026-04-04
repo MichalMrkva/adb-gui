@@ -1,4 +1,4 @@
-package cz.uuk.adbgui.domain.uiState
+package cz.uuk.adbgui.presentation.screens.dashboard
 
 import androidx.compose.runtime.Immutable
 import cz.uuk.adbgui.domain.model.Device
