@@ -51,6 +51,7 @@ class DashboardVM : ViewModel() {
             is DashboardActions.Refresh -> refresh()
             is DashboardActions.SetDevice -> setDevice(action.device)
             is DashboardActions.ToggleOpen -> toggleOpen()
+            is DashboardActions.Reboot -> reboot(action.device)
         }
     }
 
@@ -84,6 +85,16 @@ class DashboardVM : ViewModel() {
     }
 
     private fun refresh() {
+        viewModelScope.launch {
+            repository.refresh()
+        }
+
+    }
+
+    private fun reboot(device: AndroidDevice) {
+        viewModelScope.launch {
+            repository.reboot(device)
+        }
 
     }
 
