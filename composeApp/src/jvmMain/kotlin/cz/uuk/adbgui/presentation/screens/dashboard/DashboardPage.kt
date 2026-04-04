@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,6 +46,13 @@ internal fun DashboardContent(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            // IMAGE PREVIEW AREA
+            FileImage(
+                imagePath = state.file,
+                onRemove = { onAction(DashboardActions.OnHide) },
+                modifier = Modifier.fillMaxSize()
+            )
 
             // ---------- TITLE ----------
             Box(
@@ -155,12 +162,6 @@ internal fun DashboardContent(
                         }
                     }
                 }
-
-                // IMAGE PREVIEW AREA
-                FileImage(
-                    imagePath = state.file,
-                    onRemove = { onAction(DashboardActions.OnHide) }
-                )
             }
         }
     }
@@ -170,14 +171,15 @@ internal fun DashboardContent(
 @Composable
 fun FileImage(
     imagePath: File?,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    modifier: Modifier
 ) {
     if (imagePath == null) return
 
     val imageBitmap = remember(imagePath) {
         try {
             val bytes = imagePath.readBytes()
-            SkiaImage.makeFromEncoded(bytes).asImageBitmap()
+            SkiaImage.makeFromEncoded(bytes).toComposeImageBitmap()
         } catch (e: Exception) {
             null
         }
@@ -186,13 +188,13 @@ fun FileImage(
     imageBitmap?.let { bitmap ->
 
         Box(
-            modifier = Modifier.padding(16.dp)
+            modifier = modifier.padding(16.dp)
         ) {
 
             Image(
                 bitmap = bitmap,
                 contentDescription = "Selected image",
-                modifier = Modifier.size(250.dp)
+                modifier = Modifier.fillMaxSize()
             )
 
             // remove button
