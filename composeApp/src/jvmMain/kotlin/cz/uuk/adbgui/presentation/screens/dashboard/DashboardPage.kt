@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Cross
 import cz.uuk.adbgui.domain.vm.DashboardVM
 
 @Composable
@@ -96,7 +99,7 @@ internal fun DashboardContent(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),
-                    value = "",
+                    value = state.searchTerm,
                     onValueChange = { onAction(DashboardActions.Search(it)) },
                     label = { Text("Package") }
                 )
@@ -112,10 +115,31 @@ internal fun DashboardContent(
                         Card(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                text = pkg.id,
-                                modifier = Modifier.padding(12.dp)
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                // Package name
+                                Text(
+                                    text = pkg.id,
+                                    modifier = Modifier.padding(12.dp)
+                                )
+
+                                // Delete button
+                                IconButton(
+                                    onClick = {
+                                        println("Delete $pkg")
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = FontAwesomeIcons.Solid.Cross,
+                                        contentDescription = "Delete package"
+                                    )
+                                }
+                            }
                         }
                     }
                 }
