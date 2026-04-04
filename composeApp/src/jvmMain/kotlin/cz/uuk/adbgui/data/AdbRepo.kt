@@ -27,14 +27,15 @@ class AdbRepository(
     fun refresh() {}
 
     private fun devicesStateFlow() = tickerFlow(1.seconds, 0.seconds).map {
-        getDevices()
+        val devices = getDevices()
+        devices
     }.stateIn(scope, SharingStarted.Lazily, emptyList())
 
     private fun getDevices(): List<AndroidDevice> {
         val output = runAdb("devices", "-l") ?: return emptyList()
         return output.lines()
             .drop(1)
-            .filter { it.contains("\tdevice") }
+            .filter { it.trim().split("\\s+".toRegex()).getOrNull(1) == "device" }
             .map { line ->
                 val parts = line.trim().split("\\s+".toRegex())
                 val serial = parts[0]
