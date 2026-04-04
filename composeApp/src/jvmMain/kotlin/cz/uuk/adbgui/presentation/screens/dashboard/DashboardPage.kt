@@ -111,7 +111,7 @@ internal fun DashboardContent(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(state.packages) { pkg ->
+                    items(state.packagesFiltered) { pkg ->
                         Card(
                             modifier = Modifier.fillMaxWidth()
                         ) {

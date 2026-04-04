@@ -38,7 +38,8 @@ class DashboardVM : ViewModel() {
 
     private fun getPackages(device: AndroidDevice) {
         viewModelScope.launch {
-            repository.devicePackages(device).collect { packages -> _uiState.update { it.copy(packages = packages) } }
+            repository.devicePackages(device)
+                .collect { packages -> _uiState.update { it.copy(packagesFiltered = packages, packages = packages) } }
         }
 
     }
@@ -70,6 +71,7 @@ class DashboardVM : ViewModel() {
     private fun search(term: String) {
         val packages = _uiState.value.packages
         if (term.isBlank()) {
+            _uiState.update { it.copy(searchTerm = term, packagesFiltered = it.packages) }
             return
         }
         val pattern = Regex.escape(term)
@@ -78,7 +80,7 @@ class DashboardVM : ViewModel() {
         val filteredPackages = packages.filter { pkg ->
             regex.containsMatchIn(pkg.id)
         }
-        _uiState.update { it.copy(packages = filteredPackages, searchTerm = term) }
+        _uiState.update { it.copy(packagesFiltered = filteredPackages, searchTerm = term) }
     }
 
     private fun refresh() {

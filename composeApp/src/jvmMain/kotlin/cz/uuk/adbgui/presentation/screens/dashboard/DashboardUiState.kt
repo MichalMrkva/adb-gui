@@ -11,4 +11,5 @@ data class DashboardUiState(
     val selectedDevice: AndroidDevice? = null,
     val searchTerm: String = "",
     val packages: List<AndroidPackage> = listOf(),
+    val packagesFiltered: List<AndroidPackage> = listOf(),
 )
