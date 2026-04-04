@@ -131,7 +131,7 @@ internal fun DashboardContent(
                                 // Delete button
                                 IconButton(
                                     onClick = {
-                                        println("Delete $pkg")
+                                        onAction(DashboardActions.ClosePackage(state.selectedDevice!!, pkg))
                                     }
                                 ) {
                                     Icon(

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import java.io.File
 import kotlin.time.Duration.Companion.seconds
 
 class AdbRepository(
@@ -25,7 +26,30 @@ class AdbRepository(
     }
 
     fun refresh() {
-        runAdb("kill")
+        runAdb("kill-server")
+        runAdb("start-server")
+    }
+
+    fun reboot(device: AndroidDevice) {
+        runAdb("-s", device.id, "reboot")
+    }
+
+    fun screenshot(device: AndroidDevice): File? {
+        return try {
+            val process = ProcessBuilder("adb", "-s", device.id, "exec-out", "screencap", "-p")
+                .redirectErrorStream(false)
+                .start()
+            val bytes = process.inputStream.readBytes()
+            process.waitFor()
+            if (bytes.isEmpty()) return null
+            val desktop = File(System.getProperty("user.home"), "Desktop")
+            val timestamp = System.currentTimeMillis()
+            val file = File(desktop, "${device.name}_$timestamp.png")
+            file.writeBytes(bytes)
+            file
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun devicesStateFlow() = tickerFlow(1.seconds, 0.seconds).map {
@@ -59,7 +83,7 @@ class AdbRepository(
     }.stateIn(scope, SharingStarted.WhileSubscribed(1.seconds.inWholeMilliseconds), emptyList())
 
     fun deletePackage(device: AndroidDevice, pack: AndroidPackage) {
-        runAdb("-s", device.id, "shell", "pm", "uninstall", "--user", "0", pack.id)
+        runAdb("-s", device.id, "uninstall", pack.id)
     }
 
     private fun runAdb(vararg args: String): String? {
