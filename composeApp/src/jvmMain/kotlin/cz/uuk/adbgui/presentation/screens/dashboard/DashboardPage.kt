@@ -158,8 +158,8 @@ internal fun DashboardContent(
 
                 // IMAGE PREVIEW AREA
                 FileImage(
-                    imagePath = imagePath,
-                    onRemove = { imagePath = null }
+                    imagePath = state.file,
+                    onRemove = { onAction(DashboardActions.OnHide) }
                 )
             }
         }
@@ -169,14 +169,14 @@ internal fun DashboardContent(
 
 @Composable
 fun FileImage(
-    imagePath: String?,
+    imagePath: File?,
     onRemove: () -> Unit
 ) {
     if (imagePath == null) return
 
     val imageBitmap = remember(imagePath) {
         try {
-            val bytes = File(imagePath).readBytes()
+            val bytes = imagePath.readBytes()
             SkiaImage.makeFromEncoded(bytes).asImageBitmap()
         } catch (e: Exception) {
             null

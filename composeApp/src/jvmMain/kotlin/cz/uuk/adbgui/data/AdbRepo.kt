@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.time.Duration.Companion.seconds
 
@@ -18,29 +20,35 @@ class AdbRepository(
     val devices: StateFlow<List<AndroidDevice>> = devicesStateFlow()
 
     init {
-        startServer()
+        scope.launch {
+            startServer()
+        }
     }
 
-    private fun startServer() {
+    private suspend fun startServer() {
         runAdb("start-server")
     }
 
-    fun refresh() {
+    suspend fun refresh() {
         runAdb("kill-server")
         runAdb("start-server")
     }
 
-    fun reboot(device: AndroidDevice) {
+    suspend fun reboot(device: AndroidDevice) {
         runAdb("-s", device.id, "reboot")
     }
 
-    fun screenshot(device: AndroidDevice): File? {
+    suspend fun screenshot(device: AndroidDevice): File? {
         return try {
-            val process = ProcessBuilder("adb", "-s", device.id, "exec-out", "screencap", "-p")
-                .redirectErrorStream(false)
-                .start()
+            val process = withContext(Dispatchers.IO) {
+                ProcessBuilder("adb", "-s", device.id, "exec-out", "screencap", "-p")
+                    .redirectErrorStream(false)
+                    .start()
+            }
             val bytes = process.inputStream.readBytes()
-            process.waitFor()
+            withContext(Dispatchers.IO) {
+                process.waitFor()
+            }
             if (bytes.isEmpty()) return null
             val desktop = File(System.getProperty("user.home"), "Desktop")
             val timestamp = System.currentTimeMillis()
@@ -57,7 +65,7 @@ class AdbRepository(
         devices
     }.stateIn(scope, SharingStarted.Lazily, emptyList())
 
-    private fun getDevices(): List<AndroidDevice> {
+    private suspend fun getDevices(): List<AndroidDevice> {
         val output = runAdb("devices", "-l") ?: return emptyList()
         return output.lines()
             .drop(1)
@@ -70,7 +78,7 @@ class AdbRepository(
             }
     }
 
-    private fun getPackages(device: AndroidDevice): List<AndroidPackage> {
+    private suspend fun getPackages(device: AndroidDevice): List<AndroidPackage> {
 
         val output = runAdb("-s", device.id, "shell", "pm", "list", "packages") ?: return emptyList()
         return output.lines()
@@ -82,12 +90,12 @@ class AdbRepository(
         getPackages(device)
     }.stateIn(scope, SharingStarted.WhileSubscribed(1.seconds.inWholeMilliseconds), emptyList())
 
-    fun deletePackage(device: AndroidDevice, pack: AndroidPackage) {
+    suspend fun deletePackage(device: AndroidDevice, pack: AndroidPackage) {
         runAdb("-s", device.id, "uninstall", pack.id)
     }
 
-    private fun runAdb(vararg args: String): String? {
-        return try {
+    private suspend fun runAdb(vararg args: String): String? = withContext(Dispatchers.IO) {
+        try {
             val process = ProcessBuilder("adb", *args)
                 .redirectErrorStream(true)
                 .start()
