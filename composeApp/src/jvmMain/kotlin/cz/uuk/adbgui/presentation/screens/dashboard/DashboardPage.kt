@@ -1,6 +1,8 @@
 package cz.uuk.adbgui.presentation.screens.dashboard
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,6 +35,9 @@ internal fun DashboardContent() {
 
     val devices = listOf("Device 1", "Device 2", "Device 3")
 
+    // fake package list
+    val packages = List(20) { "com.example.app$it" }
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -42,7 +47,7 @@ internal fun DashboardContent() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            // TITLE
+            // ---------- TITLE ----------
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -55,18 +60,14 @@ internal fun DashboardContent() {
 
             // ---------- ROW 1 ----------
             Row(
-                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Button(
-                    onClick = { /* refresh logic */ }
-                ) {
+                Button(onClick = { }) {
                     Text("Refresh server")
                 }
 
-                // Dropdown
                 Box {
                     OutlinedButton(
                         onClick = { expanded.value = true }
@@ -93,14 +94,40 @@ internal fun DashboardContent() {
 
             // ---------- ROW 2 ----------
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f), // takes remaining screen height
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+
+                // TextField side
                 TextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                     value = packageName.value,
                     onValueChange = { packageName.value = it },
                     label = { Text("Package") }
                 )
+
+                // LazyColumn side
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(packages) { pkg ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = pkg,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     }
