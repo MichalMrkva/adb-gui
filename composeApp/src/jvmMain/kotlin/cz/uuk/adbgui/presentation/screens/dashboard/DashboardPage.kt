@@ -61,10 +61,10 @@ internal fun DashboardContent(
                 Button(onClick = { onAction(DashboardActions.Refresh) }) {
                     Text("Refresh server")
                 }
-                Button(onClick = { onAction(DashboardActions.Refresh) }) {
+                Button(onClick = { onAction(DashboardActions.Reboot) }) {
                     Text("Reboot")
                 }
-                Button(onClick = { onAction(DashboardActions.Refresh) }) {
+                Button(onClick = { onAction(DashboardActions.Screenshot) }) {
                     Text("Screenshot")
                 }
 
