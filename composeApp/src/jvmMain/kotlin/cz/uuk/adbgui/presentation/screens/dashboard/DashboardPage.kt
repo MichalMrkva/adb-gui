@@ -2,21 +2,23 @@ package cz.uuk.adbgui.presentation.screens.dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.uuk.adbgui.domain.vm.DashboardVM
 
 @Composable
 fun DashboardPage(vm: DashboardVM) {
-    //val state by vm.uiState.collectAsStateWithLifecycle()
-    val state = remember { DashboardUiStateUiState() }
+    val state by vm.uiState.collectAsStateWithLifecycle()
     DashboardContent(
         state = state,
+        onAction = vm::onDashboardAction
     )
 
 }
@@ -65,15 +67,15 @@ internal fun DashboardContent(
                     }
 
                     DropdownMenu(
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false }
+                        expanded = state.isOpen,
+                        onDismissRequest = { onAction(DashboardActions.ToggleOpen) }
                     ) {
-                        devices.forEach { device ->
+                        state.deviceList.forEach { device ->
                             DropdownMenuItem(
-                                text = { Text(device) },
+                                text = { Text(device.name) },
                                 onClick = {
-                                    selectedDevice.value = device
-                                    expanded.value = false
+                                    onAction(DashboardActions.SetDevice(device))
+                                    onAction(DashboardActions.ToggleOpen)
                                 }
                             )
                         }
@@ -94,8 +96,8 @@ internal fun DashboardContent(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),
-                    value = packageName.value,
-                    onValueChange = { packageName.value = it },
+                    value = "",
+                    onValueChange = { onAction(DashboardActions.Search(it)) },
                     label = { Text("Package") }
                 )
 
@@ -106,12 +108,12 @@ internal fun DashboardContent(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(packages) { pkg ->
+                    items(state.packages) { pkg ->
                         Card(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = pkg,
+                                text = pkg.id,
                                 modifier = Modifier.padding(12.dp)
                             )
                         }
