@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.uuk.adbgui.data.AdbRepository
 import cz.uuk.adbgui.domain.model.AndroidDevice
+import cz.uuk.adbgui.domain.model.AndroidPackage
 import cz.uuk.adbgui.presentation.screens.dashboard.DashboardActions
 import cz.uuk.adbgui.presentation.screens.dashboard.DashboardUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +45,7 @@ class DashboardVM : ViewModel() {
 
     fun onDashboardAction(action: DashboardActions) {
         when (action) {
-            is DashboardActions.ClosePackage -> closePackage(action.packageId)
+            is DashboardActions.ClosePackage -> closePackage(action.device, action.androidPackage)
             is DashboardActions.Search -> TODO()
             is DashboardActions.Refresh -> TODO()
             is DashboardActions.SetDevice -> setDevice(action.device)
@@ -52,9 +53,9 @@ class DashboardVM : ViewModel() {
         }
     }
 
-    private fun closePackage(packageId: String) {
+    private fun closePackage(device: AndroidDevice, androidPackage: AndroidPackage) {
         viewModelScope.launch {
-
+            repository.deletePackage(device, androidPackage)
         }
     }
 
