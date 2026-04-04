@@ -51,8 +51,8 @@ class DashboardVM : ViewModel() {
             is DashboardActions.Refresh -> refresh()
             is DashboardActions.SetDevice -> setDevice(action.device)
             is DashboardActions.ToggleOpen -> toggleOpen()
-            is DashboardActions.Reboot -> reboot(action.device)
-            is DashboardActions.Screenshot -> screenshot(action.device)
+            is DashboardActions.Reboot -> reboot()
+            is DashboardActions.Screenshot -> screenshot()
         }
     }
 
@@ -92,14 +92,16 @@ class DashboardVM : ViewModel() {
 
     }
 
-    private fun reboot(device: AndroidDevice) {
+    private fun reboot() {
+        val device = _uiState.value.selectedDevice ?: return
         viewModelScope.launch {
             repository.reboot(device)
         }
 
     }
 
-    private fun screenshot(device: AndroidDevice) {
+    private fun screenshot() {
+        val device = _uiState.value.selectedDevice ?: return
         viewModelScope.launch {
             repository.screenshot(device)
         }
