@@ -5,7 +5,7 @@ import cz.uuk.adbgui.domain.model.AndroidDevice
 import cz.uuk.adbgui.domain.model.AndroidPackage
 
 @Immutable
-data class DashboardUiStateUiState(
+data class DashboardUiState(
     val isOpen: Boolean = false,
     val deviceList: List<AndroidDevice> = listOf(),
     val selectedDevice: AndroidDevice? = null,

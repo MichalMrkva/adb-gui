@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cz.uuk.adbgui.data.AdbRepository
 import cz.uuk.adbgui.domain.model.AndroidDevice
 import cz.uuk.adbgui.presentation.screens.dashboard.DashboardActions
-import cz.uuk.adbgui.presentation.screens.dashboard.DashboardUiStateUiState
+import cz.uuk.adbgui.presentation.screens.dashboard.DashboardUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 class DashboardVM : ViewModel() {
     private val repository: AdbRepository = AdbRepository()
-    private val _uiState = MutableStateFlow(DashboardUiStateUiState())
-    val uiState: StateFlow<DashboardUiStateUiState> = _uiState
+    private val _uiState = MutableStateFlow(DashboardUiState())
+    val uiState: StateFlow<DashboardUiState> = _uiState
 
     init {
         loadDevices()
@@ -71,7 +71,7 @@ class DashboardVM : ViewModel() {
     }
 
     private fun refresh() {
-        
+
     }
 
 

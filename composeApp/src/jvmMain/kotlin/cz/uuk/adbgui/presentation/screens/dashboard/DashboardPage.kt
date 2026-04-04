@@ -26,7 +26,7 @@ fun DashboardPage(vm: DashboardVM) {
 @Preview
 @Composable
 internal fun DashboardContent(
-    state: DashboardUiStateUiState = DashboardUiStateUiState(),
+    state: DashboardUiState = DashboardUiState(),
     onAction: (DashboardActions) -> Unit = {},
 ) {
     Scaffold { paddingValues ->
