@@ -24,7 +24,9 @@ class AdbRepository(
         runAdb("start-server")
     }
 
-    fun refresh() {}
+    fun refresh() {
+        runAdb("kill")
+    }
 
     private fun devicesStateFlow() = tickerFlow(1.seconds, 0.seconds).map {
         val devices = getDevices()
