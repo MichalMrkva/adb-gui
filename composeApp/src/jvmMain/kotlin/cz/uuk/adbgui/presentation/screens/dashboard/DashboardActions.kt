@@ -8,6 +8,5 @@ sealed interface DashboardActions {
     object Refresh : DashboardActions
     data class SetDevice(val device: AndroidDevice) : DashboardActions
     data class Search(val term: String) : DashboardActions
-    data class SetSearchTerm(val term: String) : DashboardActions
     data class ClosePackage(val device: AndroidDevice, val androidPackage: AndroidPackage) : DashboardActions
 }
