@@ -2,16 +2,16 @@ package cz.uuk.adbgui.presentation.screens.dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cz.uuk.adbgui.domain.vm.DashboardVM
 
 @Composable
-fun DashboardPage() {
+fun DashboardPage(vm: DashboardVM) {
     //val state by vm.uiState.collectAsStateWithLifecycle()
     DashboardContent()
 
@@ -19,25 +19,10 @@ fun DashboardPage() {
 
 @Preview
 @Composable
-internal fun DashboardContent() {
-
-    var packageName = androidx.compose.runtime.remember {
-        androidx.compose.runtime.mutableStateOf("")
-    }
-
-    var expanded = androidx.compose.runtime.remember {
-        androidx.compose.runtime.mutableStateOf(false)
-    }
-
-    var selectedDevice = androidx.compose.runtime.remember {
-        androidx.compose.runtime.mutableStateOf("Select device")
-    }
-
-    val devices = listOf("Device 1", "Device 2", "Device 3")
-
-    // fake package list
-    val packages = List(20) { "com.example.app$it" }
-
+internal fun DashboardContent(
+    state: DashboardUiStateUiState = DashboardUiStateUiState(),
+    onAction: (DashboardActions) -> Unit = {},
+) {
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -70,9 +55,9 @@ internal fun DashboardContent() {
 
                 Box {
                     OutlinedButton(
-                        onClick = { expanded.value = true }
+                        onClick = { onAction(DashboardActions.ToggleOpen) }
                     ) {
-                        Text(selectedDevice.value)
+                        Text(state.selectedDevice?.name ?: "")
                     }
 
                     DropdownMenu(
