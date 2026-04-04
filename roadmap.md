@@ -10,4 +10,14 @@
 	2. Otevřený IDE a atd. 
 - Rozdělit práci
 - Začít pracovat
+- Vymyslet v rychlosti jak konkrétně komunikovat mezi buňkami
+- Vytvořit rychlý náčrt UI nakterém se bude dát komunikovat snadno nápady
+- Pustit se dopráce konkrétních úkolů každého člověka.
 
+# 
+- Snažit se předat myšlenku co nejvíc a nepředpokládat že ostatní umí číst myšlenky
+- 
+
+# Obecná filozofie ??
+- Funkce > UI
+- Kvalita funcí > Kvantita funkcí
