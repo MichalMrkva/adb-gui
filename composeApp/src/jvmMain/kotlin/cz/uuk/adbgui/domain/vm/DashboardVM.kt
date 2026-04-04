@@ -62,5 +62,9 @@ class DashboardVM : ViewModel() {
         _uiState.update { it.copy(selectedDevice = device) }
     }
 
+    private fun toggleOpen() {
+
+    }
+
 
 }
