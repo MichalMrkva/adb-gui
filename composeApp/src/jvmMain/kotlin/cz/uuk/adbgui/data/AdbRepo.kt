@@ -20,6 +20,8 @@ class AdbRepository(
         getDevices()
     }
 
+    fun refresh() {}
+
     private fun devicesStateFlow() = tickerFlow(1.seconds, 0.seconds).map {
         getDevices()
     }.stateIn(scope, SharingStarted.Lazily, emptyList())
