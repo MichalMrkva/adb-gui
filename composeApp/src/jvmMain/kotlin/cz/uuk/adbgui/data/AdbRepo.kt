@@ -5,8 +5,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class AdbRepository {
-    private val devices = MutableStateFlow<List<Device>>(emptyList())
-    fun getDevices(): StateFlow<List<Device>> = devices
+    private val _devices = MutableStateFlow<List<Device>>(emptyList())
+    val devices: StateFlow<List<Device>> = _devices
 
-    private fun startServer() {}
+    private fun startServer() {
+        getDevices()
+    }
+
+    private fun getDevices() {}
+
+    fun devicePackages(device: Device): StateFlow<List<Package>> {
+        val flow = MutableStateFlow<List<Package>>(emptyList())
+        return flow
+    }
 }
