@@ -7,11 +7,11 @@
 	3. kickoff struktury
 - Team sync
 	1. Všichni naklonováno repo
-	2. Otevřený IDE a atd. 
+	2. Otevřený IDE a atd.
+- Vytvořit rychlý náčrt UI nakterém se bude dát komunikovat snadno nápady
 - Rozdělit práci
 - Začít pracovat
 - Vymyslet v rychlosti jak konkrétně komunikovat mezi buňkami
-- Vytvořit rychlý náčrt UI nakterém se bude dát komunikovat snadno nápady
 - Pustit se dopráce konkrétních úkolů každého člověka.
 
 # 
